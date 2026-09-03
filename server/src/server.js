@@ -3,18 +3,21 @@ const cors = require("cors");
 require("dotenv").config();
 
 const prisma = require("./prisma");
+const taskRoutes = require("./routes/taskRoutes");
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
+// Home route
 app.get("/", (req, res) => {
   res.json({
     message: "F3 Task Manager API is running",
   });
 });
 
+// Database test
 app.get("/api/test-db", async (req, res) => {
   try {
     const userCount = await prisma.user.count();
@@ -31,6 +34,9 @@ app.get("/api/test-db", async (req, res) => {
     });
   }
 });
+
+// Task routes
+app.use("/api/tasks", taskRoutes);
 
 const PORT = process.env.PORT || 5000;
 
