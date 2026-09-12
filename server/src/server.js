@@ -4,6 +4,7 @@ require("dotenv").config();
 
 const prisma = require("./prisma");
 const taskRoutes = require("./routes/taskRoutes");
+const authRoutes = require("./routes/authRoutes");
 
 const app = express();
 
@@ -37,6 +38,7 @@ app.get("/api/test-db", async (req, res) => {
 
 // Task routes
 app.use("/api/tasks", taskRoutes);
+app.use("/api/auth", authRoutes);
 
 const PORT = process.env.PORT || 5000;
 
