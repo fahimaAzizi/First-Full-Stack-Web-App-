@@ -1,0 +1,51 @@
+.page {
+  min-height: 100vh;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.page h1 {
+  font-size: 40px;
+  margin-bottom: 15px;
+}
+
+.page p {
+  font-size: 18px;
+  margin-bottom: 25px;
+}
+
+.page form {
+  width: 350px;
+  max-width: 100%;
+  margin: 30px auto;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.page form div {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  gap: 6px;
+}
+
+.page input {
+  padding: 12px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.page button {
+  padding: 12px 24px;
+  font-size: 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  margin: 5px;
+}
+
+.button-group {
+  margin-top: 30px;
+}
