@@ -8,7 +8,12 @@ const {
   deleteTask,
 } = require("../controllers/taskController");
 
+const authenticateToken = require("../middleware/authMiddleware");
+
 const router = express.Router();
+
+// All task routes require authentication
+router.use(authenticateToken);
 
 router.post("/", createTask);
 router.get("/", getTasks);
