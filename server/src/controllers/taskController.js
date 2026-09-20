@@ -15,7 +15,7 @@ async function createTask(req, res) {
       data: {
         title: title.trim(),
         description: description || null,
-        userId:req.userId,
+        userId: req.userId,
       },
     });
 
@@ -29,10 +29,13 @@ async function createTask(req, res) {
   }
 }
 
-// GET ALL TASKS
+// GET ALL TASKS FOR LOGGED-IN USER
 async function getTasks(req, res) {
   try {
     const tasks = await prisma.task.findMany({
+      where: {
+        userId: req.userId,
+      },
       orderBy: {
         createdAt: "desc",
       },
@@ -53,9 +56,16 @@ async function getTask(req, res) {
   try {
     const id = Number(req.params.id);
 
-    const task = await prisma.task.findUnique({
+    if (Number.isNaN(id)) {
+      return res.status(400).json({
+        message: "Invalid task ID",
+      });
+    }
+
+    const task = await prisma.task.findFirst({
       where: {
         id: id,
+        userId: req.userId,
       },
     });
 
@@ -81,9 +91,16 @@ async function updateTask(req, res) {
     const id = Number(req.params.id);
     const { title, description, completed } = req.body;
 
-    const existingTask = await prisma.task.findUnique({
+    if (Number.isNaN(id)) {
+      return res.status(400).json({
+        message: "Invalid task ID",
+      });
+    }
+
+    const existingTask = await prisma.task.findFirst({
       where: {
         id: id,
+        userId: req.userId,
       },
     });
 
@@ -93,16 +110,27 @@ async function updateTask(req, res) {
       });
     }
 
+    if (title !== undefined && title.trim() === "") {
+      return res.status(400).json({
+        message: "Task title cannot be empty",
+      });
+    }
+
     const task = await prisma.task.update({
       where: {
         id: id,
       },
       data: {
-        title: title !== undefined ? title.trim() : existingTask.title,
+        title:
+          title !== undefined
+            ? title.trim()
+            : existingTask.title,
+
         description:
           description !== undefined
             ? description
             : existingTask.description,
+
         completed:
           completed !== undefined
             ? completed
@@ -125,9 +153,16 @@ async function deleteTask(req, res) {
   try {
     const id = Number(req.params.id);
 
-    const existingTask = await prisma.task.findUnique({
+    if (Number.isNaN(id)) {
+      return res.status(400).json({
+        message: "Invalid task ID",
+      });
+    }
+
+    const existingTask = await prisma.task.findFirst({
       where: {
         id: id,
+        userId: req.userId,
       },
     });
 
