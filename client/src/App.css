@@ -1,54 +1,129 @@
+/* =========================
+   GENERAL PAGES
+========================= */
+
 .page {
   min-height: 100vh;
   padding: 60px 20px;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .page h1 {
-  font-size: 40px;
-  margin-bottom: 15px;
+  font-size: 42px;
+  margin: 0 0 15px;
+  letter-spacing: -1px;
 }
 
-.page p {
-  font-size: 18px;
-  margin-bottom: 25px;
+.page > p {
+  color: #667085;
+  font-size: 17px;
+  line-height: 1.6;
 }
+
+/* =========================
+   BUTTONS
+========================= */
+
+.page button,
+.dashboard button {
+  border: none;
+  border-radius: 8px;
+  padding: 11px 18px;
+  font-weight: 600;
+  transition:
+    transform 0.15s ease,
+    opacity 0.15s ease;
+}
+
+.page button:hover,
+.dashboard button:hover {
+  transform: translateY(-1px);
+  opacity: 0.9;
+}
+
+.page button:disabled,
+.dashboard button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.button-group {
+  display: flex;
+  gap: 12px;
+  margin-top: 25px;
+}
+
+.button-group button {
+  min-width: 120px;
+}
+
+/* =========================
+   FORMS
+========================= */
 
 .page form {
-  width: 350px;
+  width: 400px;
   max-width: 100%;
   margin: 30px auto;
+  padding: 30px;
   display: flex;
   flex-direction: column;
   gap: 18px;
+  background: white;
+  border: 1px solid #e6e8ec;
+  border-radius: 14px;
+  box-shadow: 0 8px 30px rgba(16, 24, 40, 0.06);
 }
 
 .page form div {
   display: flex;
   flex-direction: column;
   text-align: left;
-  gap: 6px;
+  gap: 7px;
 }
 
-.page input {
-  padding: 12px;
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
+.page label {
+  font-size: 14px;
+  font-weight: 600;
 }
 
-.page button {
-  padding: 12px 24px;
-  font-size: 16px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  margin: 5px;
+.page input,
+.page textarea {
+  width: 100%;
+  padding: 12px 14px;
+  font-size: 15px;
+  border: 1px solid #d0d5dd;
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.15s ease;
 }
 
-.button-group {
-  margin-top: 30px;
+.page input:focus,
+.page textarea:focus {
+  border-color: #667085;
 }
+
+/* =========================
+   ERROR
+========================= */
+
+.error-message {
+  width: 100%;
+  padding: 12px 14px;
+  margin: 0;
+  border-radius: 8px;
+  background: #fff0f0;
+  color: #b42318;
+  border: 1px solid #fecdca;
+  font-size: 14px !important;
+}
+
+/* =========================
+   DASHBOARD
+========================= */
 
 .dashboard {
   min-height: 100vh;
@@ -59,36 +134,50 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 25px 40px;
+  padding: 24px 50px;
   background: white;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid #eaecf0;
 }
 
 .dashboard-header h1 {
   margin: 0;
+  font-size: 24px;
 }
 
 .dashboard-header p {
   margin: 5px 0 0;
+  color: #667085;
 }
 
 .dashboard-header button {
-  margin: 0;
+  background: #172033;
+  color: white;
 }
 
 .dashboard-content {
   width: 900px;
-  max-width: 90%;
+  max-width: 92%;
   margin: 40px auto;
 }
+
+/* =========================
+   ADD TASK
+========================= */
 
 .task-form-section,
 .tasks-section {
   background: white;
-  padding: 25px;
+  padding: 28px;
   margin-bottom: 25px;
-  border-radius: 12px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  border: 1px solid #eaecf0;
+  border-radius: 14px;
+  box-shadow: 0 5px 20px rgba(16, 24, 40, 0.04);
+}
+
+.task-form-section h2,
+.tasks-section h2 {
+  margin-top: 0;
+  margin-bottom: 20px;
 }
 
 .task-form-section form {
@@ -99,10 +188,16 @@
 
 .task-form-section input,
 .task-form-section textarea {
-  padding: 12px;
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
+  padding: 13px 14px;
+  font-size: 15px;
+  border: 1px solid #d0d5dd;
+  border-radius: 8px;
+  outline: none;
+}
+
+.task-form-section input:focus,
+.task-form-section textarea:focus {
+  border-color: #667085;
 }
 
 .task-form-section textarea {
@@ -110,10 +205,20 @@
   resize: vertical;
 }
 
+.task-form-section button {
+  align-self: flex-start;
+  background: #172033;
+  color: white;
+}
+
+/* =========================
+   TASK LIST
+========================= */
+
 .task-list {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 14px;
 }
 
 .task-card {
@@ -122,8 +227,17 @@
   align-items: center;
   gap: 20px;
   padding: 20px;
-  border: 1px solid #ddd;
+  border: 1px solid #eaecf0;
   border-radius: 10px;
+  background: #fff;
+  transition:
+    box-shadow 0.15s ease,
+    transform 0.15s ease;
+}
+
+.task-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 5px 15px rgba(16, 24, 40, 0.06);
 }
 
 .task-info {
@@ -131,15 +245,18 @@
 }
 
 .task-info h3 {
-  margin-top: 0;
+  margin: 0 0 8px;
+  font-size: 17px;
 }
 
 .task-info p {
-  margin-bottom: 0;
+  margin: 0;
+  color: #667085;
+  line-height: 1.5;
 }
 
 .task-card.completed {
-  opacity: 0.6;
+  opacity: 0.65;
 }
 
 .task-card.completed h3 {
@@ -149,28 +266,51 @@
 .task-actions {
   display: flex;
   gap: 8px;
+  flex-wrap: wrap;
 }
 
-.task-actions button {
-  margin: 0;
+.task-actions button:first-child {
+  background: #172033;
+  color: white;
 }
 
-.error-message {
-  padding: 12px;
-  border-radius: 6px;
-  background: #ffe5e5;
-  margin-bottom: 20px;
+.task-actions button:last-child {
+  background: #fff0f0;
+  color: #b42318;
 }
+
+/* =========================
+   MOBILE
+========================= */
 
 @media (max-width: 700px) {
-  .dashboard-header {
-    padding: 20px;
+  .page {
+    padding: 40px 15px;
+  }
+
+  .page h1 {
+    font-size: 34px;
+  }
+
+  .page form {
+    padding: 22px;
   }
 
   .dashboard-header {
+    padding: 20px;
     flex-direction: column;
     align-items: flex-start;
     gap: 15px;
+  }
+
+  .dashboard-content {
+    max-width: 94%;
+    margin: 25px auto;
+  }
+
+  .task-form-section,
+  .tasks-section {
+    padding: 20px;
   }
 
   .task-card {
@@ -180,6 +320,9 @@
 
   .task-actions {
     width: 100%;
-    flex-wrap: wrap;
+  }
+
+  .task-actions button {
+    flex: 1;
   }
 }
