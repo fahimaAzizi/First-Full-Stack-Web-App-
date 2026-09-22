@@ -12,11 +12,18 @@ function Dashboard() {
   const navigate = useNavigate();
 
   const [tasks, setTasks] = useState([]);
+
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
 
+  const [editingTaskId, setEditingTaskId] = useState(null);
+  const [editTitle, setEditTitle] = useState("");
+  const [editDescription, setEditDescription] = useState("");
+
   const [loading, setLoading] = useState(true);
   const [adding, setAdding] = useState(false);
+  const [saving, setSaving] = useState(false);
+
   const [error, setError] = useState("");
 
   const token = localStorage.getItem("token");
@@ -66,6 +73,10 @@ function Dashboard() {
     loadTasks();
   }, []);
 
+  // =========================
+  // CREATE TASK
+  // =========================
+
   async function handleAddTask(event) {
     event.preventDefault();
 
@@ -79,8 +90,8 @@ function Dashboard() {
       setError("");
 
       const data = await createTask(token, {
-        title,
-        description,
+        title: title.trim(),
+        description: description.trim(),
       });
 
       setTasks((currentTasks) => [
@@ -96,6 +107,70 @@ function Dashboard() {
       setAdding(false);
     }
   }
+
+  // =========================
+  // START EDITING
+  // =========================
+
+  function startEditing(task) {
+    setEditingTaskId(task.id);
+    setEditTitle(task.title);
+    setEditDescription(task.description || "");
+    setError("");
+  }
+
+  // =========================
+  // CANCEL EDITING
+  // =========================
+
+  function cancelEditing() {
+    setEditingTaskId(null);
+    setEditTitle("");
+    setEditDescription("");
+  }
+
+  // =========================
+  // SAVE EDIT
+  // =========================
+
+  async function saveEdit(taskId) {
+    if (!editTitle.trim()) {
+      setError("Task title is required.");
+      return;
+    }
+
+    try {
+      setSaving(true);
+      setError("");
+
+      const data = await updateTask(
+        token,
+        taskId,
+        {
+          title: editTitle.trim(),
+          description: editDescription.trim(),
+        }
+      );
+
+      setTasks((currentTasks) =>
+        currentTasks.map((task) =>
+          task.id === taskId
+            ? data
+            : task
+        )
+      );
+
+      cancelEditing();
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  // =========================
+  // COMPLETE / INCOMPLETE
+  // =========================
 
   async function toggleTask(task) {
     try {
@@ -121,7 +196,19 @@ function Dashboard() {
     }
   }
 
+  // =========================
+  // DELETE TASK
+  // =========================
+
   async function handleDeleteTask(taskId) {
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this task?"
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
     try {
       setError("");
 
@@ -139,6 +226,8 @@ function Dashboard() {
 
   return (
     <div className="dashboard">
+      {/* HEADER */}
+
       <header className="dashboard-header">
         <div>
           <h1>F3 Task Manager</h1>
@@ -154,6 +243,9 @@ function Dashboard() {
       </header>
 
       <main className="dashboard-content">
+
+        {/* ADD TASK */}
+
         <section className="task-form-section">
           <h2>Add New Task</h2>
 
@@ -180,16 +272,22 @@ function Dashboard() {
               type="submit"
               disabled={adding}
             >
-              {adding ? "Adding..." : "Add Task"}
+              {adding
+                ? "Adding..."
+                : "Add Task"}
             </button>
           </form>
         </section>
+
+        {/* ERROR */}
 
         {error && (
           <p className="error-message">
             {error}
           </p>
         )}
+
+        {/* TASKS */}
 
         <section className="tasks-section">
           <h2>My Tasks</h2>
@@ -202,7 +300,9 @@ function Dashboard() {
             </p>
           ) : (
             <div className="task-list">
+
               {tasks.map((task) => (
+
                 <div
                   className={`task-card ${
                     task.completed
@@ -211,38 +311,126 @@ function Dashboard() {
                   }`}
                   key={task.id}
                 >
-                  <div className="task-info">
-                    <h3>{task.title}</h3>
 
-                    {task.description && (
-                      <p>{task.description}</p>
-                    )}
-                  </div>
+                  {editingTaskId === task.id ? (
 
-                  <div className="task-actions">
-                    <button
-                      onClick={() =>
-                        toggleTask(task)
-                      }
-                    >
-                      {task.completed
-                        ? "Mark Incomplete"
-                        : "Complete"}
-                    </button>
+                    /* EDIT MODE */
 
-                    <button
-                      onClick={() =>
-                        handleDeleteTask(task.id)
-                      }
-                    >
-                      Delete
-                    </button>
-                  </div>
+                    <div className="task-edit-form">
+
+                      <input
+                        type="text"
+                        value={editTitle}
+                        onChange={(event) =>
+                          setEditTitle(
+                            event.target.value
+                          )
+                        }
+                        placeholder="Task title"
+                      />
+
+                      <textarea
+                        value={editDescription}
+                        onChange={(event) =>
+                          setEditDescription(
+                            event.target.value
+                          )
+                        }
+                        placeholder="Task description"
+                      />
+
+                      <div className="task-actions">
+
+                        <button
+                          onClick={() =>
+                            saveEdit(task.id)
+                          }
+                          disabled={saving}
+                        >
+                          {saving
+                            ? "Saving..."
+                            : "Save"}
+                        </button>
+
+                        <button
+                          onClick={cancelEditing}
+                          disabled={saving}
+                        >
+                          Cancel
+                        </button>
+
+                      </div>
+
+                    </div>
+
+                  ) : (
+
+                    /* NORMAL MODE */
+
+                    <>
+                      <div className="task-info">
+
+                        <h3>
+                          {task.title}
+                        </h3>
+
+                        {task.description && (
+                          <p>
+                            {task.description}
+                          </p>
+                        )}
+
+                        <small>
+                          {task.completed
+                            ? "Completed"
+                            : "In progress"}
+                        </small>
+
+                      </div>
+
+                      <div className="task-actions">
+
+                        <button
+                          onClick={() =>
+                            toggleTask(task)
+                          }
+                        >
+                          {task.completed
+                            ? "Mark Incomplete"
+                            : "Complete"}
+                        </button>
+
+                        <button
+                          onClick={() =>
+                            startEditing(task)
+                          }
+                        >
+                          Edit
+                        </button>
+
+                        <button
+                          onClick={() =>
+                            handleDeleteTask(
+                              task.id
+                            )
+                          }
+                        >
+                          Delete
+                        </button>
+
+                      </div>
+                    </>
+                  )}
+
                 </div>
+
               ))}
+
             </div>
           )}
+
         </section>
+
       </main>
     </div>
   );
