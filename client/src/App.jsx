@@ -8,6 +8,8 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
+import NotFound from "./pages/NotFound";
+
 import ProtectedRoute from "./components/ProtectedRoute";
 
 import "./App.css";
@@ -16,11 +18,20 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route
+          path="/"
+          element={<Home />}
+        />
 
-        <Route path="/login" element={<Login />} />
+        <Route
+          path="/login"
+          element={<Login />}
+        />
 
-        <Route path="/register" element={<Register />} />
+        <Route
+          path="/register"
+          element={<Register />}
+        />
 
         <Route
           path="/dashboard"
@@ -29,6 +40,12 @@ function App() {
               <Dashboard />
             </ProtectedRoute>
           }
+        />
+
+        {/* 404 */}
+        <Route
+          path="*"
+          element={<NotFound />}
         />
       </Routes>
     </BrowserRouter>
