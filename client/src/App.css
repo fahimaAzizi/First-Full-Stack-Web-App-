@@ -604,3 +604,41 @@
     font-size: 30px;
   }
 }
+
+/* =========================
+   EDIT TASK
+========================= */
+
+.task-edit-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.task-edit-form input,
+.task-edit-form textarea {
+  width: 100%;
+  padding: 12px 14px;
+  font-size: 15px;
+  border: 1px solid #d0d5dd;
+  border-radius: 8px;
+  outline: none;
+}
+
+.task-edit-form input:focus,
+.task-edit-form textarea:focus {
+  border-color: #667085;
+}
+
+.task-edit-form textarea {
+  min-height: 90px;
+  resize: vertical;
+}
+
+.task-info small {
+  display: block;
+  margin-top: 10px;
+  color: #667085;
+  font-size: 13px;
+}
