@@ -41,55 +41,77 @@ function Login() {
   }
 
   return (
-    <div className="page">
-      <h1>Login</h1>
+    <div className="auth-page">
+      <div className="auth-card">
+        <div className="auth-logo">✓</div>
 
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="email">Email</label>
+        <div className="auth-header">
+          <span className="auth-label">F3 TASK MANAGER</span>
 
-          <input
-            id="email"
-            type="email"
-            name="email"
-            placeholder="Enter your email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-          />
-        </div>
+          <h1>Welcome back</h1>
 
-        <div>
-          <label htmlFor="password">Password</label>
-
-          <input
-            id="password"
-            type="password"
-            name="password"
-            placeholder="Enter your password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-          />
-        </div>
-
-        {error && (
-          <p className="error-message">
-            {error}
+          <p>
+            Log in to manage your tasks and stay organized.
           </p>
-        )}
+        </div>
 
-        <button type="submit" disabled={loading}>
-          {loading ? "Logging in..." : "Login"}
-        </button>
-      </form>
+        <form onSubmit={handleSubmit} className="auth-form">
+          <div className="form-group">
+            <label htmlFor="email">Email address</label>
 
-      <p>
-        Don't have an account?{" "}
-        <Link to="/register">Register</Link>
-      </p>
+            <input
+              id="email"
+              type="email"
+              name="email"
+              placeholder="you@example.com"
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
+          </div>
 
-      <Link to="/">Back to Home</Link>
+          <div className="form-group">
+            <label htmlFor="password">Password</label>
+
+            <input
+              id="password"
+              type="password"
+              name="password"
+              placeholder="Enter your password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          {error && (
+            <p className="error-message">
+              {error}
+            </p>
+          )}
+
+          <button
+            type="submit"
+            className="auth-button"
+            disabled={loading}
+          >
+            {loading ? "Logging in..." : "Login"}
+          </button>
+        </form>
+
+        <div className="auth-divider">
+          <span>OR</span>
+        </div>
+
+        <p className="auth-switch">
+          Don't have an account?{" "}
+          <Link to="/register">Create one</Link>
+        </p>
+
+        <Link className="back-link" to="/">
+          ← Back to Home
+        </Link>
+      </div>
     </div>
   );
 }
