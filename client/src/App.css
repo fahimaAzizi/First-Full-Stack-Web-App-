@@ -642,3 +642,30 @@
   color: #667085;
   font-size: 13px;
 }
+
+/* =========================
+   404 PAGE
+========================= */
+
+.not-found {
+  justify-content: center;
+}
+
+.not-found h1 {
+  font-size: 100px;
+  line-height: 1;
+  margin-bottom: 10px;
+}
+
+.not-found h2 {
+  font-size: 30px;
+  margin: 0 0 10px;
+}
+
+.not-found p {
+  margin-bottom: 25px;
+}
+
+.not-found .button-group {
+  justify-content: center;
+}
