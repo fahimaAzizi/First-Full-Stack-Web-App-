@@ -12,7 +12,6 @@ function Dashboard() {
   const navigate = useNavigate();
 
   const [tasks, setTasks] = useState([]);
-
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
 
@@ -29,14 +28,11 @@ function Dashboard() {
   const token = localStorage.getItem("token");
   const storedUser = localStorage.getItem("user");
 
-  const user = storedUser
-    ? JSON.parse(storedUser)
-    : null;
+  const user = storedUser ? JSON.parse(storedUser) : null;
 
   function logout() {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
-
     navigate("/login");
   }
 
@@ -51,7 +47,6 @@ function Dashboard() {
       setError("");
 
       const data = await getTasks(token);
-
       setTasks(data);
     } catch (error) {
       if (
@@ -73,10 +68,6 @@ function Dashboard() {
     loadTasks();
   }, []);
 
-  // =========================
-  // CREATE TASK
-  // =========================
-
   async function handleAddTask(event) {
     event.preventDefault();
 
@@ -94,10 +85,7 @@ function Dashboard() {
         description: description.trim(),
       });
 
-      setTasks((currentTasks) => [
-        data,
-        ...currentTasks,
-      ]);
+      setTasks((currentTasks) => [data, ...currentTasks]);
 
       setTitle("");
       setDescription("");
@@ -108,10 +96,6 @@ function Dashboard() {
     }
   }
 
-  // =========================
-  // START EDITING
-  // =========================
-
   function startEditing(task) {
     setEditingTaskId(task.id);
     setEditTitle(task.title);
@@ -119,19 +103,11 @@ function Dashboard() {
     setError("");
   }
 
-  // =========================
-  // CANCEL EDITING
-  // =========================
-
   function cancelEditing() {
     setEditingTaskId(null);
     setEditTitle("");
     setEditDescription("");
   }
-
-  // =========================
-  // SAVE EDIT
-  // =========================
 
   async function saveEdit(taskId) {
     if (!editTitle.trim()) {
@@ -143,20 +119,14 @@ function Dashboard() {
       setSaving(true);
       setError("");
 
-      const data = await updateTask(
-        token,
-        taskId,
-        {
-          title: editTitle.trim(),
-          description: editDescription.trim(),
-        }
-      );
+      const data = await updateTask(token, taskId, {
+        title: editTitle.trim(),
+        description: editDescription.trim(),
+      });
 
       setTasks((currentTasks) =>
         currentTasks.map((task) =>
-          task.id === taskId
-            ? data
-            : task
+          task.id === taskId ? data : task
         )
       );
 
@@ -168,37 +138,23 @@ function Dashboard() {
     }
   }
 
-  // =========================
-  // COMPLETE / INCOMPLETE
-  // =========================
-
   async function toggleTask(task) {
     try {
       setError("");
 
-      const data = await updateTask(
-        token,
-        task.id,
-        {
-          completed: !task.completed,
-        }
-      );
+      const data = await updateTask(token, task.id, {
+        completed: !task.completed,
+      });
 
       setTasks((currentTasks) =>
         currentTasks.map((currentTask) =>
-          currentTask.id === task.id
-            ? data
-            : currentTask
+          currentTask.id === task.id ? data : currentTask
         )
       );
     } catch (error) {
       setError(error.message);
     }
   }
-
-  // =========================
-  // DELETE TASK
-  // =========================
 
   async function handleDeleteTask(taskId) {
     const confirmed = window.confirm(
@@ -215,14 +171,18 @@ function Dashboard() {
       await removeTask(token, taskId);
 
       setTasks((currentTasks) =>
-        currentTasks.filter(
-          (task) => task.id !== taskId
-        )
+        currentTasks.filter((task) => task.id !== taskId)
       );
     } catch (error) {
       setError(error.message);
     }
   }
+
+  const completedTasks = tasks.filter(
+    (task) => task.completed
+  ).length;
+
+  const pendingTasks = tasks.length - completedTasks;
 
   return (
     <div className="dashboard">
@@ -230,51 +190,99 @@ function Dashboard() {
 
       <header className="dashboard-header">
         <div>
-          <h1>F3 Task Manager</h1>
+          <p className="dashboard-label">TASK MANAGER</p>
 
-          <p>
-            Welcome, {user?.name || "User"}!
+          <h1>Welcome back, {user?.name || "User"} 👋</h1>
+
+          <p className="dashboard-subtitle">
+            Stay organized and keep moving forward.
           </p>
         </div>
 
-        <button onClick={logout}>
+        <button
+          className="logout-button"
+          onClick={logout}
+        >
           Logout
         </button>
       </header>
 
       <main className="dashboard-content">
+        {/* STATS */}
+
+        <section className="stats-grid">
+          <div className="stat-card">
+            <span className="stat-icon">📋</span>
+            <div>
+              <strong>{tasks.length}</strong>
+              <span>Total Tasks</span>
+            </div>
+          </div>
+
+          <div className="stat-card">
+            <span className="stat-icon">⏳</span>
+            <div>
+              <strong>{pendingTasks}</strong>
+              <span>In Progress</span>
+            </div>
+          </div>
+
+          <div className="stat-card">
+            <span className="stat-icon">✅</span>
+            <div>
+              <strong>{completedTasks}</strong>
+              <span>Completed</span>
+            </div>
+          </div>
+        </section>
 
         {/* ADD TASK */}
 
         <section className="task-form-section">
-          <h2>Add New Task</h2>
+          <div className="section-heading">
+            <div>
+              <span className="section-label">CREATE</span>
+              <h2>Add a New Task</h2>
+            </div>
+          </div>
 
           <form onSubmit={handleAddTask}>
-            <input
-              type="text"
-              placeholder="Task title"
-              value={title}
-              onChange={(event) =>
-                setTitle(event.target.value)
-              }
-              required
-            />
+            <div className="form-group">
+              <label htmlFor="task-title">Task title</label>
 
-            <textarea
-              placeholder="Task description (optional)"
-              value={description}
-              onChange={(event) =>
-                setDescription(event.target.value)
-              }
-            />
+              <input
+                id="task-title"
+                type="text"
+                placeholder="What do you need to do?"
+                value={title}
+                onChange={(event) =>
+                  setTitle(event.target.value)
+                }
+                required
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="task-description">
+                Description
+              </label>
+
+              <textarea
+                id="task-description"
+                placeholder="Add some details..."
+                value={description}
+                onChange={(event) =>
+                  setDescription(event.target.value)
+                }
+              />
+            </div>
 
             <button
+              className="add-task-button"
               type="submit"
               disabled={adding}
             >
-              {adding
-                ? "Adding..."
-                : "Add Task"}
+              {adding ? "Adding..." : "+ Add Task"}
             </button>
           </form>
         </section>
@@ -290,33 +298,50 @@ function Dashboard() {
         {/* TASKS */}
 
         <section className="tasks-section">
-          <h2>My Tasks</h2>
+          <div className="section-heading">
+            <div>
+              <span className="section-label">YOUR WORK</span>
+              <h2>My Tasks</h2>
+            </div>
+
+            {tasks.length > 0 && (
+              <span className="task-count">
+                {tasks.length}{" "}
+                {tasks.length === 1 ? "task" : "tasks"}
+              </span>
+            )}
+          </div>
 
           {loading ? (
-            <p>Loading tasks...</p>
+            <div className="empty-state">
+              <div className="loading-spinner"></div>
+              <p>Loading your tasks...</p>
+            </div>
           ) : tasks.length === 0 ? (
-            <p>
-              No tasks yet. Add your first task!
-            </p>
+            <div className="empty-state">
+              <div className="empty-icon">📝</div>
+              <h3>No tasks yet</h3>
+              <p>
+                Add your first task above and start
+                getting things done.
+              </p>
+            </div>
           ) : (
             <div className="task-list">
-
               {tasks.map((task) => (
-
                 <div
                   className={`task-card ${
-                    task.completed
-                      ? "completed"
-                      : ""
+                    task.completed ? "completed" : ""
                   }`}
                   key={task.id}
                 >
-
                   {editingTaskId === task.id ? (
-
                     /* EDIT MODE */
 
                     <div className="task-edit-form">
+                      <span className="section-label">
+                        EDIT TASK
+                      </span>
 
                       <input
                         type="text"
@@ -340,8 +365,8 @@ function Dashboard() {
                       />
 
                       <div className="task-actions">
-
                         <button
+                          className="save-button"
                           onClick={() =>
                             saveEdit(task.id)
                           }
@@ -349,58 +374,70 @@ function Dashboard() {
                         >
                           {saving
                             ? "Saving..."
-                            : "Save"}
+                            : "Save Changes"}
                         </button>
 
                         <button
+                          className="cancel-button"
                           onClick={cancelEditing}
                           disabled={saving}
                         >
                           Cancel
                         </button>
-
                       </div>
-
                     </div>
-
                   ) : (
-
                     /* NORMAL MODE */
 
                     <>
                       <div className="task-info">
+                        <div className="task-title-row">
+                          <button
+                            className={`complete-circle ${
+                              task.completed
+                                ? "checked"
+                                : ""
+                            }`}
+                            onClick={() =>
+                              toggleTask(task)
+                            }
+                            aria-label={
+                              task.completed
+                                ? "Mark incomplete"
+                                : "Mark complete"
+                            }
+                          >
+                            {task.completed ? "✓" : ""}
+                          </button>
 
-                        <h3>
-                          {task.title}
-                        </h3>
+                          <h3>{task.title}</h3>
+                        </div>
 
                         {task.description && (
-                          <p>
-                            {task.description}
-                          </p>
+                          <p>{task.description}</p>
                         )}
 
-                        <small>
+                        <span className="task-status">
                           {task.completed
-                            ? "Completed"
-                            : "In progress"}
-                        </small>
-
+                            ? "✓ Completed"
+                            : "○ In progress"}
+                        </span>
                       </div>
 
                       <div className="task-actions">
-
                         <button
+                          className="complete-button"
                           onClick={() =>
                             toggleTask(task)
                           }
                         >
                           {task.completed
-                            ? "Mark Incomplete"
+                            ? "Undo"
                             : "Complete"}
                         </button>
 
                         <button
+                          className="edit-button"
                           onClick={() =>
                             startEditing(task)
                           }
@@ -409,28 +446,21 @@ function Dashboard() {
                         </button>
 
                         <button
+                          className="delete-button"
                           onClick={() =>
-                            handleDeleteTask(
-                              task.id
-                            )
+                            handleDeleteTask(task.id)
                           }
                         >
                           Delete
                         </button>
-
                       </div>
                     </>
                   )}
-
                 </div>
-
               ))}
-
             </div>
           )}
-
         </section>
-
       </main>
     </div>
   );
