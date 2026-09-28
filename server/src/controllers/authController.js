@@ -1,13 +1,12 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const prisma = require("../prisma");
+const prisma = require("../lib/prisma");
 
 // REGISTER
 async function register(req, res) {
   try {
     const { name, email, password } = req.body;
 
-    // Check required fields
     if (!name || !email || !password) {
       return res.status(400).json({
         message: "Name, email, and password are required",
@@ -20,10 +19,12 @@ async function register(req, res) {
       });
     }
 
+    const normalizedEmail = email.trim().toLowerCase();
+
     // Check if user already exists
     const existingUser = await prisma.user.findUnique({
       where: {
-        email: email.toLowerCase(),
+        email: normalizedEmail,
       },
     });
 
@@ -40,7 +41,7 @@ async function register(req, res) {
     const user = await prisma.user.create({
       data: {
         name: name.trim(),
-        email: email.toLowerCase(),
+        email: normalizedEmail,
         password: hashedPassword,
       },
     });
@@ -56,7 +57,7 @@ async function register(req, res) {
       }
     );
 
-    res.status(201).json({
+    return res.status(201).json({
       message: "Registration successful",
       token,
       user: {
@@ -66,9 +67,9 @@ async function register(req, res) {
       },
     });
   } catch (error) {
-    console.error(error);
+    console.error("Registration error:", error);
 
-    res.status(500).json({
+    return res.status(500).json({
       message: "Registration failed",
     });
   }
@@ -85,10 +86,12 @@ async function login(req, res) {
       });
     }
 
+    const normalizedEmail = email.trim().toLowerCase();
+
     // Find user
     const user = await prisma.user.findUnique({
       where: {
-        email: email.toLowerCase(),
+        email: normalizedEmail,
       },
     });
 
@@ -121,7 +124,7 @@ async function login(req, res) {
       }
     );
 
-    res.json({
+    return res.json({
       message: "Login successful",
       token,
       user: {
@@ -131,9 +134,9 @@ async function login(req, res) {
       },
     });
   } catch (error) {
-    console.error(error);
+    console.error("Login error:", error);
 
-    res.status(500).json({
+    return res.status(500).json({
       message: "Login failed",
     });
   }
