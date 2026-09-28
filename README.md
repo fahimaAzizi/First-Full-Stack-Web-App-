@@ -1,198 +1,107 @@
 # F3 Task Manager
 
-A full-stack task management web application built as part of the **F3 · First Full-Stack Web App** project.
+A full-stack task management web application built for the **F3 · First Full-Stack Web App** project.
 
-The application allows users to create an account, log in securely, and manage their personal tasks with full CRUD functionality.
+Users can create an account, log in, and manage their tasks with full CRUD functionality.
 
 ## 🚀 Features
 
-* User registration
-* User login and authentication
-* JWT-based authentication
-* Create tasks
-* View tasks
-* Edit tasks
-* Delete tasks
+* User registration and login
+* JWT authentication
+* Create, view, edit, and delete tasks
 * Mark tasks as completed
-* PostgreSQL database persistence
-* Protected task API routes
-* Responsive and modern user interface
-* React frontend connected to an Express backend
+* PostgreSQL data persistence
+* Protected API routes
+* Responsive UI
+* React frontend + Express backend
 
 ## 🛠️ Tech Stack
 
-### Frontend
-
-* React
-* Vite
-* JavaScript
-* CSS
-
-### Backend
-
-* Node.js
-* Express.js
-* REST API
-* JWT
-* bcrypt
-
-### Database
-
-* PostgreSQL
-* Neon PostgreSQL
-* Prisma ORM
-
-### Development Tools
-
-* Git
-* GitHub
-* npm
+**Frontend:** React, Vite, JavaScript, CSS
+**Backend:** Node.js, Express.js, JWT, bcrypt
+**Database:** PostgreSQL, Neon, Prisma
+**Tools:** Git, GitHub, npm
 
 ## 📁 Project Structure
 
 ```text
 F3-task-manager/
-│
 ├── client/
-│   ├── src/
-│   │   ├── pages/
-│   │   │   ├── Home.jsx
-│   │   │   ├── Login.jsx
-│   │   │   ├── Register.jsx
-│   │   │   └── Dashboard.jsx
-│   │   │
-│   │   ├── services/
-│   │   │   └── api.js
-│   │   │
-│   │   ├── App.jsx
-│   │   ├── main.jsx
-│   │   └── index.css
-│   │
-│   ├── .env
-│   └── package.json
+│   └── src/
+│       ├── pages/
+│       ├── services/
+│       ├── App.jsx
+│       └── index.css
 │
 ├── server/
 │   ├── src/
 │   │   ├── controllers/
-│   │   │   └── authController.js
-│   │   │
 │   │   ├── routes/
-│   │   │   ├── authRoutes.js
-│   │   │   └── taskRoutes.js
-│   │   │
 │   │   ├── middleware/
-│   │   │   └── authMiddleware.js
-│   │   │
-│   │   ├── lib/
-│   │   │   └── prisma.js
-│   │   │
-│   │   └── server.js
-│   │
-│   ├── prisma/
-│   │   ├── schema.prisma
-│   │   └── migrations/
-│   │
-│   ├── .env
-│   └── package.json
+│   │   └── lib/
+│   └── prisma/
 │
 └── README.md
 ```
 
 ## 🔐 Authentication
 
-Users can register and log in using their email and password.
+Passwords are securely hashed with **bcrypt**.
 
-Passwords are hashed using **bcrypt** before being stored in the database.
+After login or registration, the server creates a **JWT token** which is used to access protected task routes.
 
-After successful registration or login, the server generates a **JWT token**. The frontend stores the token and sends it with protected task requests.
+## 📋 API
 
-Protected requests use:
+### Authentication
 
-```text
-Authorization: Bearer <token>
-```
+| Method | Endpoint             | Purpose        |
+| ------ | -------------------- | -------------- |
+| POST   | `/api/auth/register` | Create account |
+| POST   | `/api/auth/login`    | Login          |
 
-## 📋 Task CRUD
+### Tasks
 
-The application supports complete CRUD operations.
+| Method | Endpoint         | Purpose     |
+| ------ | ---------------- | ----------- |
+| GET    | `/api/tasks`     | Get tasks   |
+| POST   | `/api/tasks`     | Create task |
+| PUT    | `/api/tasks/:id` | Update task |
+| DELETE | `/api/tasks/:id` | Delete task |
 
-| Operation   | Method | Endpoint         |
-| ----------- | ------ | ---------------- |
-| Get tasks   | GET    | `/api/tasks`     |
-| Create task | POST   | `/api/tasks`     |
-| Update task | PUT    | `/api/tasks/:id` |
-| Delete task | DELETE | `/api/tasks/:id` |
+## ⚙️ Run Locally
 
-Authentication endpoints:
-
-| Operation | Method | Endpoint             |
-| --------- | ------ | -------------------- |
-| Register  | POST   | `/api/auth/register` |
-| Login     | POST   | `/api/auth/login`    |
-
-## 🗄️ Database
-
-The project uses **PostgreSQL** with **Prisma ORM**.
-
-The database is hosted using Neon PostgreSQL during development.
-
-Prisma is responsible for:
-
-* Database schema
-* Migrations
-* Database queries
-* Prisma Client generation
-
-The database stores user accounts and tasks persistently, meaning tasks remain available after refreshing the application.
-
-## ⚙️ Running the Project Locally
-
-### 1. Clone the repository
+### 1. Clone the project
 
 ```bash
 git clone https://github.com/fahimaAzizi/First-Full-Stack-Web-App-.git
 cd F3-task-manager
 ```
 
-### 2. Install frontend dependencies
+### 2. Install dependencies
+
+**Client:**
 
 ```bash
 cd client
 npm install
 ```
 
-### 3. Configure frontend environment
+**Server:**
 
-Create:
-
-```text
-client/.env
+```bash
+cd ../server
+npm install
 ```
 
-Add:
+### 3. Environment variables
+
+Create `client/.env`:
 
 ```env
 VITE_API_URL=http://localhost:5000
 ```
 
-### 4. Install backend dependencies
-
-Open another terminal:
-
-```bash
-cd server
-npm install
-```
-
-### 5. Configure backend environment
-
-Create:
-
-```text
-server/.env
-```
-
-Add your PostgreSQL database connection and JWT secret:
+Create `server/.env`:
 
 ```env
 DATABASE_URL="your_postgresql_connection_string"
@@ -200,153 +109,68 @@ JWT_SECRET="your_secret_key"
 PORT=5000
 ```
 
-### 6. Generate Prisma Client
+### 4. Setup Prisma
 
 From the `server` folder:
 
 ```bash
 npx prisma generate
-```
-
-### 7. Run database migrations
-
-```bash
 npx prisma migrate dev
 ```
 
-### 8. Start the backend
+### 5. Start the application
+
+**Backend:**
 
 ```bash
 npm start
 ```
 
-The backend runs on:
-
-```text
-http://localhost:5000
-```
-
-### 9. Start the frontend
-
-From the `client` folder:
+**Frontend:**
 
 ```bash
+cd ../client
 npm run dev
 ```
 
-The frontend runs on:
+Open:
 
 ```text
 http://localhost:5173
 ```
 
-## 🧪 Testing
-
-The following functionality was tested locally:
+## 🧪 Tested
 
 * Registration
 * Login
-* JWT authentication
-* Creating tasks
-* Viewing tasks
-* Editing tasks
-* Completing tasks
-* Undoing completed tasks
-* Deleting tasks
-* Refreshing the page while keeping database data
-* Protected task routes
-* Frontend-to-backend communication
-* PostgreSQL persistence
+* Authentication
+* Create task
+* Edit task
+* Complete / undo task
+* Delete task
+* Database persistence
+* Protected routes
+* Frontend ↔ backend communication
+* Responsive design
 
-## 📱 Responsive Design
+## 🚧 Deployment
 
-The interface was designed to work across:
+Deployment was **skipped** because the selected hosting provider required a payment card.
 
-* Desktop
-* Laptop
-* Tablet
-* Mobile screens
-
-The application includes responsive layouts for the home page, authentication pages, and dashboard.
-
-## 🚧 Deployment Status
-
-Deployment was **not completed**.
-
-The selected free hosting provider required a payment card for deployment, and a card was not available.
-
-The application is therefore currently tested and functional in the **local development environment**.
-
-All other major F3 requirements were completed:
-
-* ✅ Frontend
-* ✅ Backend
-* ✅ API connection
-* ✅ Database
-* ✅ Authentication
-* ✅ CRUD
-* ✅ Persistent data
-* ✅ Responsive UI
-* ⏭️ Deployment skipped
+The application is fully functional and tested in the local development environment.
 
 ## 📚 What I Learned
 
-During this project I learned how different parts of a full-stack application work together.
-
-Key areas I practiced:
-
 * Building a React frontend
-* Creating an Express backend
-* Designing REST API routes
-* Connecting a frontend to a backend
-* Working with PostgreSQL
-* Using Prisma ORM
-* Creating database migrations
+* Creating an Express REST API
+* Connecting PostgreSQL with Prisma
 * Implementing JWT authentication
-* Hashing passwords with bcrypt
-* Protecting API routes
-* Implementing CRUD operations
-* Using environment variables
-* Debugging frontend and backend errors
-* Using Git and GitHub
-
-## 💡 Challenges
-
-One of the main challenges was connecting all parts of the application together.
-
-I had to troubleshoot issues involving:
-
-* API connection
-* CORS
-* Environment variables
-* PostgreSQL connection
-* Prisma migrations
-* Authentication
-* Git configuration
-* Frontend and backend communication
-
-Solving these problems helped me understand that building a full-stack application involves connecting many separate technologies and debugging the communication between them.
-
-## 🎯 F3 Project Goal
-
-The goal of this project was to move from basic frontend development toward building a complete full-stack application.
-
-The final application demonstrates the complete local flow:
-
-```text
-React Frontend
-      ↓
-Express REST API
-      ↓
-JWT Authentication
-      ↓
-Prisma ORM
-      ↓
-PostgreSQL Database
-```
+* Building CRUD functionality
+* Working with Git and GitHub
+* Debugging full-stack applications
 
 ---
 
 **F3 · First Full-Stack Web App**
 
-Built with React, Node.js, Express, Prisma, and PostgreSQL.
+Built with **React · Node.js · Express · Prisma · PostgreSQL**
